@@ -128,8 +128,8 @@ def main():
     Path("build/decrypt.bin").write_bytes(device.external)
 
     # Dump ITCM and DTCM RAM data
-    Path("build/itcm_rwdata.bin").write_bytes(device.internal.rwdata.datas[0])
-    Path("build/dtcm_rwdata.bin").write_bytes(device.internal.rwdata.datas[1])
+    #Path("build/itcm_rwdata.bin").write_bytes(device.internal.rwdata.datas[0])
+    #Path("build/dtcm_rwdata.bin").write_bytes(device.internal.rwdata.datas[1])
 
     # Copy over novel code
     patch = args.patch.read_bytes()
@@ -139,6 +139,7 @@ def main():
         )
 
     novel_code_start = device.internal.address("__do_global_dtors_aux") & 0x00FF_FFF8
+    print(f"novel_code_start: {novel_code_start}")
     device.internal[novel_code_start:] = patch[novel_code_start:]
     del patch
 
@@ -151,9 +152,17 @@ def main():
     print("#########################" + Style.RESET_ALL)
 
     # Perform all replacements in stock code.
-    internal_remaining_free, sram3_remaining_free = apply_patches(
-        args, device, Path("build")
-    )
+    #internal_remaining_free, sram3_remaining_free = apply_patches(
+    #    args, device, Path("build")
+    #)
+    internal_remaining_free = -1
+    sram3_remaining_free = -1
+
+    print("Invoke custom bootloader prior to calling stock Reset_Handler.")
+    device.internal.replace(0x4, "bootloader")
+
+    print("Intercept button presses for macros.")
+    device.internal.bl(0x6B52, "read_buttons")
 
     # Erase the extflash vram region
     if not args.no_save:

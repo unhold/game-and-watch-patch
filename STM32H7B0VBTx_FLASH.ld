@@ -79,7 +79,7 @@ SECTIONS
   /* The program code and other data goes into FLASH */
   .text :
   {
-    . = 0x00018100;
+    . = 0x00019300;
     . = ALIGN(4);
     *(.text)           /* .text sections (code) */
     *(.text*)          /* .text* sections (code) */

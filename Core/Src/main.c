@@ -5,9 +5,9 @@
 #include <assert.h>
 #include "gw_linker.h"
 #include "stm32h7xx_hal.h"
-#include "LzmaDec.h"
+//#include "LzmaDec.h"
 #include <string.h>
-#include "ips.h"
+//#include "ips.h"
 
 
 #define BANK_2_ADDRESS 0x08100000
@@ -120,7 +120,7 @@ gamepad_t read_buttons() {
     return gamepad;
 }
 
-
+/*
 const uint8_t LZMA_PROP_DATA[5] = {0x5d, 0x00, 0x40, 0x00, 0x00};
 #define LZMA_BUF_SIZE            16256
 
@@ -131,14 +131,15 @@ static void *SzAlloc(ISzAllocPtr p, size_t size) {
 
 static void SzFree(ISzAllocPtr p, void *address) {
 }
+*/
 
-const ISzAlloc g_Alloc = { SzAlloc, SzFree };
+//const ISzAlloc g_Alloc = { SzAlloc, SzFree };
 
-static unsigned char lzma_heap[LZMA_BUF_SIZE];
+//static unsigned char lzma_heap[LZMA_BUF_SIZE];
 /**
  * Dropin replacement for memcpy for loading compressed assets.
  * @param n Compressed data length. Can be larger than necessary.
- */
+ *
 void *memcpy_inflate(uint8_t *dst, const uint8_t *src, size_t n){
     ISzAlloc allocs = {
         .Alloc=SzAlloc,
@@ -154,7 +155,7 @@ void *memcpy_inflate(uint8_t *dst, const uint8_t *src, size_t n){
 
 /**
  * This gets hooked into the rwdata/bss init table.
- */
+ *
 int32_t *rwdata_inflate(int32_t *table){
     uint8_t *data = (uint8_t *)table + table[0];
     int32_t len = table[1];
@@ -166,9 +167,9 @@ int32_t *rwdata_inflate(int32_t *table){
 
 /**
  * This gets hooked into the rwdata/bss init table.
- */
+ *
 int32_t *bss_rwdata_init(int32_t *table){
-    /* Copy init values from text to data */
+    /* Copy init values from text to data
     uint32_t *init_values_ptr = &_sidata;
     uint32_t *data_ptr = &_sdata;
 
@@ -178,13 +179,13 @@ int32_t *bss_rwdata_init(int32_t *table){
         }
     }
 
-    /* Clear the zero segment */
+    /* Clear the zero segment
     for (uint32_t *bss_ptr = &_sbss; bss_ptr < &_ebss;) {
         *bss_ptr++ = 0;
     }
     return table;
 }
-
+*/
 
 gnw_mode_t get_gnw_mode(){
     uint8_t val = *gnw_mode_addr;
@@ -194,7 +195,7 @@ gnw_mode_t get_gnw_mode(){
     else return GNW_MODE_CLOCK;
 }
 
-
+/*
 void NMI_Handler(void) {
     __BKPT(0);
 }
@@ -202,3 +203,4 @@ void NMI_Handler(void) {
 void HardFault_Handler(void) {
     __BKPT(0);
 }
+*/

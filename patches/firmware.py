@@ -327,7 +327,7 @@ class IntFirmware(Firmware):
         self.elf = ELFFile(self._elf_f)
         self.symtab = self.elf.get_section_by_name(".symtab")
 
-        self.rwdata = RWData(self, 0x1_80A4, 36)
+        #self.rwdata = RWData(self, 0x1_80A4, 36)
 
     def __str__(self):
         return "internal"
